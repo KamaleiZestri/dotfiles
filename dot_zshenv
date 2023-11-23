@@ -1,0 +1,49 @@
+#TODO simplify PATH expression
+typeset -U PATH paths
+
+paths=("$HOME/custbin" "$HOME/Applications" "$HOME/.local/bin")
+
+PATH="$PATH:${$(find ~/.local/bin -maxdepth 1 -type d -printf %p:)%%:}"
+PATH="$PATH:${$(find ~/Applications -maxdepth 1 -type d -printf %p:)%%:}"
+PATH="$PATH:${$(find ~/custbin -maxdepth 1 -type d -printf %p:)%%:}"
+
+export PATH
+
+export PYTHONPATH="${PYTHONPATH}:~/custbin/"
+
+#recursively add all folders in custbin to $PATH
+
+# Default apps
+export VISUAL=kate;
+export EDITOR=micro-editor;
+export VIDEO=mpv;
+
+
+#XDG VARIABLES
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+
+# xdg ninja clan.
+export KDEHOME="$XDG_CONFIG_HOME"/kde
+export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
+export W3M_DIR="$XDG_DATA_HOME"/w3m
+export NUGET_PACKAGES="$XDG_CACHE_HOME"/NuGetPackages
+export WINEPREFIX="$XDG_DATA_HOME"/wine
+export OMNISHARPHOME="$XDG_CONFIG_HOME"/omnisharp
+export ANDROID_HOME="$XDG_DATA_HOME"/android
+export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
+export GNUPGHOME="$XDG_DATA_HOME"/gnupg
+export PYTHONSTARTUP="/etc/python/pythonrc"
+export LESSHISTFILE="$XDG_STATE_HOME"/less/lesshst
+export XCURSOR_PATH=/usr/share/icons:$XDG_DATA_HOME/icons
+export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
+export HISTFILE="${XDG_STATE_HOME}"/bash/history
+
+
+
+alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
+
+

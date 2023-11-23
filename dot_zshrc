@@ -1,0 +1,92 @@
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# Lines configured by zsh-newuser-install
+HISTFILE=${XDG_STATE_HOME}"/zsh/history.log"
+HISTSIZE=1000
+SAVEHIST=2000
+
+bindkey -e
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+zstyle :compinstall filename '$HOME/.zshrc'
+
+# autoload -Uz compinit
+# compinit
+# End of lines added by compinstall
+
+source $XDG_CONFIG_HOME/zsh/repos/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+
+
+
+
+
+#########################################################################################
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# So that lf exits to it's current directory
+alias lf='cd "$(command lf -print-last-dir "$@")"'
+
+# some more ls aliases
+alias ls='exa --icons'
+alias ll='exa --long --icons'
+alias la='exa --all --icons'
+alias lt='exa --tree --icons'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+
+
+#redirection
+alias adb='HOME="$XDG_DATA_HOME"/android adb'
+alias mpv='flatpak run io.mpv.Mpv'
+
+#safety
+alias cp="cp -i"
+alias mv="mv -i"
+alias rm="trash"
+
+alias home="cd ~"
+alias desk="cd ~/Desktop"
+
+# Search files in the current folder
+alias f="find . | grep "
+
+# fzf directory jump
+alias j='cd "$(find . -type d | fzf)"'
+
+alias redo='sudo $(history -p !!)'
+
+alias rr='curl -s -L https://raw.githubusercontent.com/keroserene/rickrollrc/master/roll.sh | bash'
+
+
+# Python autocompletion?
+eval "$(register-python-argcomplete pipx)"
+
+
+
+if [ -f "$HOME/custbin//bash_Z_Extension" ]; then
+	source "$HOME/custbin//bash_Z_Extension"
+	echo "Z Extension Online! NOW WITH TRUE POWER!!!!!! Use \"lsz\" to get the commands!"
+else
+	echo "Go checkup on that Z power in .bashrc or Custom Code..."
+fi
+
+#########################################################################################
+
+eval "$(starship init zsh)"
