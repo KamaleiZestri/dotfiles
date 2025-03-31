@@ -1,21 +1,21 @@
-#TODO simplify PATH expression
-typeset -U PATH paths
-
-paths=("$HOME/custbin" "$HOME/Applications" "$HOME/.local/bin")
-
+#Add 3 paths to PATH
 PATH="$PATH:${$(find ~/.local/bin -maxdepth 1 -type d -printf %p:)%%:}"
 PATH="$PATH:${$(find ~/Applications -maxdepth 1 -type d -printf %p:)%%:}"
 PATH="$PATH:${$(find ~/custbin -maxdepth 1 -type d -printf %p:)%%:}"
+PATH="$PATH:"~/.nimble/bin""
 
 export PATH
 
 export PYTHONPATH="${PYTHONPATH}:~/custbin/"
 
-#recursively add all folders in custbin to $PATH
+
+# https://github.com/ajeetdsouza/zoxide/blob/main/src/cmd/query.rs#L92
+export _ZO_FZF_OPTS="--exact --no-sort --cycle --keep-right --border --layout=reverse --scrollbar=▌ --bind=ctrl-z:ignore,btab:up,tab:down --height=100% --info=inline --tabstop=1 --exit-0"
+
 
 # Default apps
 export VISUAL=kate;
-export EDITOR=micro-editor;
+export EDITOR=micro;
 export VIDEO=mpv;
 
 
@@ -37,10 +37,12 @@ export ANDROID_HOME="$XDG_DATA_HOME"/android
 export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 export PYTHONSTARTUP="/etc/python/pythonrc"
+export PYTHONHISTORY="$XDG_DATA_HOME"/python
 export LESSHISTFILE="$XDG_STATE_HOME"/less/lesshst
 export XCURSOR_PATH=/usr/share/icons:$XDG_DATA_HOME/icons
 export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
 export HISTFILE="${XDG_STATE_HOME}"/bash/history
+export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
 
 
 
