@@ -1,0 +1,167 @@
+set previewer ~/custbin/lf-preview
+set preview true
+set drawbox
+set icons
+set hidden true
+
+#TODO https://github.com/eza-community/eza/issues/593
+
+# Commands
+cmd FZF-JUMP ${{
+  marked-for-bash -q "$PWD"
+  res="$(fd . ~ -u --type directory | fzf --header='Jump to directory')"
+  lf -remote "send $id cd \"$res\""
+}}
+
+cmd ZOXIDE-JUMP ${{
+  marked-for-bash -q "$PWD"
+  res="$(zoxide query -i)"
+  lf -remote "send $id cd \"$res\""
+}}
+
+cmd altjump &{{
+  temp="$PWD"
+  jump=$(marked-for-bash -j)
+  lf -remote "send $id cd \"$jump\""
+  marked-for-bash -q "$PWD"
+  echo "Quick Jumped!"
+  lf -remote 'send reload'
+}}
+
+# cmd primarymark &{{
+#   $(marked-for-bash -q "$PWD")
+#   echo "Primary marked current dir."
+# }}
+
+cmd primarymark %marked-for-bash -q "$PWD"
+cmd bookmark &{{
+  marked-for-bash "$PWD"
+  echo "Marked current dir."
+}}
+
+cmd markjump ${{
+  res="$(marked-for-bash -o | fzf --header='Jump to directory')"
+  lf -remote "send $id cd \"$res\""
+}}
+
+cmd on-select &{{
+    lf -remote "send $id set statfmt \"$(exa -ld --color=always "$f")\""
+}}
+
+cmd on-cd &{{
+    zoxide add "$PWD"
+    export STARSHIP_SHELL=
+    fmt="$(starship prompt)"
+    lf -remote "send $id set promptfmt \"$fmt\""
+}}
+
+cmd inline-open ${{
+  micro $f
+}}
+
+cmd mkdir ${{
+    printf "Directory Name: "
+    read ans
+    mkdir "$ans"
+    lf -remote 'send reload'
+}}
+
+cmd mkfile ${{
+  printf "File Name: " $f $1
+  read ans
+  touch "$ans"
+  lf -remote 'send reload'
+}}
+
+cmd trash %trash-put $fx
+
+cmd trash-restore ${{
+    trash-restore
+}}
+
+cmd chmod ${{
+  tldr chmod
+  printf "Mode Bits: "
+  read ans
+
+  for file in "$fx"
+  do
+    chmod $ans $file
+  done
+
+  lf -remote 'send reload'
+}}
+
+# cmd bulk ${{
+#   echo $id
+#   echo $PWD
+#   printf "SELECTED FILES:\n"
+#
+#   for file in "$fx"
+#   do
+#     printf "$file \n"
+#   done
+#
+#   printf "\n'Move' or 'Copy'?(Anything else to exit): "
+#   read ans
+#
+#   ans=$(echo $ans | tr '[:upper:]' '[:lower:]')
+#   if [[ $ans == "move" ]]; then
+#     for file in "$fx"
+#     do
+#       mv $file -t $PWD
+#     done
+#   elif [[ $ans == "copy "]]; then
+#     for file in "$fx"
+#     do
+#       cp $file $PWD
+#     done
+#   fi
+#
+#   lf -remote 'send reload'
+# }}
+
+# Unbind
+map m
+
+# Program Specified Commands
+map j FZF-JUMP
+map z ZOXIDE-JUMP
+
+# TODO cd bookmark jumping
+map <tab> altjump
+map q primarymark
+map bb bookmark
+map bj markjump
+
+# Common Commands
+map <esc> quit
+
+map x cut
+map c copy
+map v paste
+map o inline-open
+map <delete> trash
+map u trash-restore
+map <backspace2> clear
+map . set hidden!
+
+# Creation Commands
+map md mkdir
+map mf mkfile
+map mo chmod
+
+# TODO archive features...
+# map ar archive
+# map aru unarchive
+
+
+# Directory Directions
+map gr cd /
+map gcf cd ~/.config
+map glf cd ~/.config/lf
+map gfg cd ~/.config/flexget
+map gcb cd ~/custbin
+map gla cd ~/.local/share/applications
+map gtl cd ~/.local/share/tealdeer/pages
+map gtt cd /usr/share/sddm/themes
